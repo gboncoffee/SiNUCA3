@@ -22,8 +22,9 @@
 
 #include "memory_trace_reader.hpp"
 
+#include <sinuca3.hpp>
+
 #include "tracer/sinuca/file_handler.hpp"
-#include "utils/logging.hpp"
 
 extern "C" {
 #include <alloca.h>
@@ -52,8 +53,7 @@ int MemoryTraceReader::OpenFile(const char* sourceDir, const char* imageName,
 
 int MemoryTraceReader::ReadMemoryOperations(InstructionPacket* inst) {
     if (this->reachedEnd) {
-        SINUCA3_ERROR_PRINTF(
-            "[ReadMemoryOperations] already reached end in mem trace file!\n");
+        SINUCA3_ERROR_PRINTF("already reached end in mem trace file!\n");
         return 1;
     }
 
@@ -66,11 +66,9 @@ int MemoryTraceReader::ReadMemoryOperations(InstructionPacket* inst) {
 
     if (this->recordArray[this->recordArrayIndex].recordType !=
         MemoryRecordHeader) {
+        SINUCA3_ERROR_PRINTF("Expected memory operation header!\n");
         SINUCA3_ERROR_PRINTF(
-            "[ReadMemoryOperations] Expected memory operation header!\n");
-        SINUCA3_ERROR_PRINTF(
-            "[ReadMemoryOperations] recordType is [%d] and record array index "
-            "is [%d]\n",
+            "recordType is [%d] and record array index is [%d]\n",
             this->recordArray[this->recordArrayIndex].recordType,
             this->recordArrayIndex);
         return 1;
@@ -85,8 +83,7 @@ int MemoryTraceReader::ReadMemoryOperations(InstructionPacket* inst) {
     for (int i = 0; i < totalMemOps; ++i, ++this->recordArrayIndex) {
         if (this->recordArrayIndex == this->numberOfRecordsRead) {
             if (this->LoadRecordArray()) {
-                SINUCA3_ERROR_PRINTF(
-                    "[ReadMemoryOperations] invalid number of mem ops!\n");
+                SINUCA3_ERROR_PRINTF("invalid number of mem ops!\n");
                 this->reachedEnd = true;
                 return 1;
             }
@@ -108,8 +105,7 @@ int MemoryTraceReader::ReadMemoryOperations(InstructionPacket* inst) {
                 this->recordArray[this->recordArrayIndex].data.operation.size;
             inst->dynamicInfo.numWritings++;
         } else {
-            SINUCA3_ERROR_PRINTF(
-                "[ReadMemoryOperations] unexpected record type!\n");
+            SINUCA3_ERROR_PRINTF("unexpected record type!\n");
             return 1;
         }
     }

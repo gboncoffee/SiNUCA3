@@ -28,9 +28,8 @@
  */
 
 #include <cstdio>
+#include <sinuca3.hpp>
 #include <tracer/sinuca/file_handler.hpp>
-
-#include "utils/logging.hpp"
 
 /** @brief Check dynamic_trace_writer.hpp documentation for details */
 class DynamicTraceWriter {
@@ -77,7 +76,7 @@ class DynamicTraceWriter {
      * @param type Event type
      * @param mutexAddr Unique identifier to mutex. Field ignored if the event
      * does not request it.
-    */
+     */
     int AddThreadEvent(ThreadEventType evType);
     /** @brief Add the identifier of basic block executed. */
     int AddBasicBlockId(unsigned int basicBlockId);

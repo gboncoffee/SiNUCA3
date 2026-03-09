@@ -27,12 +27,11 @@
 #include <cstddef>
 #include <cstring>
 #include <sinuca3.hpp>
-#include <utils/logging.hpp>
+#include <utils/cache/replacement_policies/lru.hpp>
+#include <utils/cache/replacement_policies/random.hpp>
+#include <utils/cache/replacement_policies/roundRobin.hpp>
 
 #include "replacement_policy.hpp"
-#include "utils/cache/replacement_policies/lru.hpp"
-#include "utils/cache/replacement_policies/random.hpp"
-#include "utils/cache/replacement_policies/roundRobin.hpp"
 
 /**
  * @brief Number of bits in a address.

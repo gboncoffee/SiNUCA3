@@ -92,7 +92,7 @@ void EngineDebugComponent::Clock() {
 }
 
 void EngineDebugComponent::PrintStatistics() {
-    SINUCA3_LOG_PRINTF("EngineDebugComponent %p: printing statistics\n", this);
+    SINUCA3_LOG_PRINTF("printing statistics\n");
 }
 
 EngineDebugComponent::~EngineDebugComponent() {}

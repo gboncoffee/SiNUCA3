@@ -25,8 +25,8 @@
  */
 
 #include <engine/default_packets.hpp>
+#include <sinuca3.hpp>
 #include <tracer/sinuca/file_handler.hpp>
-#include <utils/logging.hpp>
 
 /** @brief Check memory_trace_reader.hpp documentation for details */
 class MemoryTraceReader {

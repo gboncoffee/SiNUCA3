@@ -34,17 +34,15 @@ void SimpleExecutionUnit::Clock() {
     for (long i = 0; i < numberOfConnections; ++i) {
         InstructionPacket packet;
         while (this->ReceiveRequestFromConnection(i, &packet) == 0) {
-            SINUCA3_DEBUG_PRINTF("[SimpleExecutionUnit] %p: executing %s.\n",
-                                 this, packet.staticInfo->instMnemonic);
+            SINUCA3_DEBUG_PRINTF("%p: executing %s.\n", this,
+                                 packet.staticInfo->instMnemonic);
             ++this->numberOfInstructions;
         }
     }
 }
 
 void SimpleExecutionUnit::PrintStatistics() {
-    SINUCA3_LOG_PRINTF("SimpleExecutionUnit [%p]\n", this);
-
-    SINUCA3_LOG_PRINTF("    Instructions executed: %lu\n",
+    SINUCA3_LOG_PRINTF("Instructions executed: %lu\n",
                        this->numberOfInstructions);
 }
 

@@ -26,13 +26,12 @@
 #include <cassert>
 #include <cstdio>
 #include <cstring>
-#include "utils/logging.hpp"
+#include <sinuca3.hpp>
 
 const int MAX_INT_DIGITS = 7;
 
-unsigned long GetPathTidInSize(const char *sourceDir,
-                                             const char *prefix,
-                                             const char *imageName) {
+unsigned long GetPathTidInSize(const char* sourceDir, const char* prefix,
+                               const char* imageName) {
     unsigned long sourceDirLen = strlen(sourceDir);
     unsigned long prefixLen = strlen(prefix);
     unsigned long imageNameLen = strlen(imageName);
@@ -40,16 +39,14 @@ unsigned long GetPathTidInSize(const char *sourceDir,
     return MAX_INT_DIGITS + 10 + sourceDirLen + prefixLen + imageNameLen;
 }
 
-void FormatPathTidIn(char *dest, const char *sourceDir,
-                                   const char *prefix, const char *imageName,
-                                   int tid, long destSize) {
+void FormatPathTidIn(char* dest, const char* sourceDir, const char* prefix,
+                     const char* imageName, int tid, long destSize) {
     snprintf(dest, destSize, "%s/%s_%s_tid%u.trace", sourceDir, prefix,
              imageName, tid);
 }
 
-unsigned long GetPathTidOutSize(const char *sourceDir,
-                                              const char *prefix,
-                                              const char *imageName) {
+unsigned long GetPathTidOutSize(const char* sourceDir, const char* prefix,
+                                const char* imageName) {
     unsigned long sourceDirLen = strlen(sourceDir);
     unsigned long prefixLen = strlen(prefix);
     unsigned long imageNameLen = strlen(imageName);
@@ -57,13 +54,12 @@ unsigned long GetPathTidOutSize(const char *sourceDir,
     return 9 + sourceDirLen + prefixLen + imageNameLen;
 }
 
-void FormatPathTidOut(char *dest, const char *sourceDir,
-                                    const char *prefix, const char *imageName,
-                                    long destSize) {
+void FormatPathTidOut(char* dest, const char* sourceDir, const char* prefix,
+                      const char* imageName, long destSize) {
     snprintf(dest, destSize, "%s/%s_%s.trace", sourceDir, prefix, imageName);
 }
 
-int FileHeader::FlushHeader(FILE *file) {
+int FileHeader::FlushHeader(FILE* file) {
     if (!file) return 1;
     long orgPos = ftell(file);
     rewind(file);
@@ -86,7 +82,7 @@ int FileHeader::LoadHeader(char* file, unsigned long* fileOffset) {
     return 0;
 }
 
-void FileHeader::ReserveHeaderSpace(FILE *file) {
+void FileHeader::ReserveHeaderSpace(FILE* file) {
     fseek(file, sizeof(*this), SEEK_SET);
 }
 
@@ -99,6 +95,6 @@ void FileHeader::SetHeaderType(uint8_t fileType) {
     } else if (this->fileType == FileTypeMemoryTrace) {
         strcpy((char*)this->prefix, PREFIX_MEMORY_FILE);
     } else {
-        SINUCA3_ERROR_PRINTF("[FileHeader] Unkown file type!\n");
+        SINUCA3_ERROR_PRINTF("Unkown file type!\n");
     }
 }

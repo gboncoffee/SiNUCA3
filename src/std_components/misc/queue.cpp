@@ -25,7 +25,6 @@
 
 #include "queue.hpp"
 
-#include <config/config.hpp>
 #include <sinuca3.hpp>
 
 #ifndef NDEBUG

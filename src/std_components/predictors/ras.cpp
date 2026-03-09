@@ -85,9 +85,8 @@ void Ras::Clock() {
 }
 
 void Ras::PrintStatistics() {
-    SINUCA3_LOG_PRINTF("Ras [%p]\n", this);
-    SINUCA3_LOG_PRINTF("    Ras Queries: %lu\n", this->numQueries);
-    SINUCA3_LOG_PRINTF("    Ras Updates: %lu\n", this->numUpdates);
+    SINUCA3_LOG_PRINTF("Queries: %lu\n", this->numQueries);
+    SINUCA3_LOG_PRINTF("Updates: %lu\n", this->numUpdates);
 }
 
 Ras::~Ras() {

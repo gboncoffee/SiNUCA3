@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <cstring>
 #include <engine/build_definitions.hpp>
-#include <utils/logging.hpp>
+#include <utils/logger.hpp>
 #include <vector>
 #include <yaml/yaml_parser.hpp>
 

@@ -30,7 +30,7 @@
 #include <engine/default_packets.hpp>  // IWYU pragma: export
 #include <engine/engine.hpp>
 #include <engine/linkable.hpp>
-#include <utils/logging.hpp>  // IWYU pragma: export
+#include <utils/logger.hpp>  // IWYU pragma: export
 
 #define COMPONENT(type) \
     if (!strcmp(name, #type)) return new type

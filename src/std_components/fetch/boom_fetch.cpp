@@ -24,13 +24,9 @@
 
 #include <cassert>
 #include <cstddef>
-#include <cstdio>
 #include <sinuca3.hpp>
 #include <std_components/predictors/interleavedBTB.hpp>
-
-#include "engine/default_packets.hpp"
-#include "utils/logging.hpp"
-#include "utils/map.hpp"
+#include <utils/map.hpp>
 
 int BoomFetch::Configure(Config config) {
     this->btb = new BranchTargetBuffer;
@@ -171,7 +167,10 @@ void BoomFetch::ClockSendBuffered() {
             break;
         }
 
-        SINUCA3_DEBUG_PRINTF("BoomFetch sending [%lx] %s\n", this->fetchBuffer[i].instruction.staticInfo->instAddress, this->fetchBuffer[i].instruction.staticInfo->instMnemonic);
+        SINUCA3_DEBUG_PRINTF(
+            "BoomFetch sending [%lx] %s\n",
+            this->fetchBuffer[i].instruction.staticInfo->instAddress,
+            this->fetchBuffer[i].instruction.staticInfo->instMnemonic);
 
         this->instructionMemory->SendRequest(this->instructionMemoryID,
                                              &this->fetchBuffer[i].instruction);
@@ -205,9 +204,9 @@ int BoomFetch::ClockCheckPredictor() {
     while (this->fetchBuffer[i].flags & BoomFetchBufferEntryFlagsPredictorCheck)
         ++i;
 
-    bool cont = this->predictor->ReceiveResponse(this->predictorID, &response) == 0; 
+    bool cont =
+        this->predictor->ReceiveResponse(this->predictorID, &response) == 0;
     if (!cont) return 1;
-
 
     /*
      * We depend on the predictor sending the responses in order and, of course,
@@ -216,12 +215,16 @@ int BoomFetch::ClockCheckPredictor() {
 
     while (cont) {
         /*
-         * We had a bug here that’s probably the reason Djikstra hated early returns.
+         * We had a bug here that’s probably the reason Djikstra hated early
+         * returns.
          */
         assert(this->fetchBuffer[i].instruction.staticInfo ==
                response.data.targetResponse.instruction.staticInfo);
 
-        SINUCA3_DEBUG_PRINTF("Predictor Check [%lx] %s\n", this->fetchBuffer[i].instruction.staticInfo->instAddress, this->fetchBuffer[i].instruction.staticInfo->instMnemonic);
+        SINUCA3_DEBUG_PRINTF(
+            "Predictor Check [%lx] %s\n",
+            this->fetchBuffer[i].instruction.staticInfo->instAddress,
+            this->fetchBuffer[i].instruction.staticInfo->instMnemonic);
 
         unsigned long target =
             this->fetchBuffer[i].instruction.staticInfo->instAddress +
@@ -243,7 +246,8 @@ int BoomFetch::ClockCheckPredictor() {
         }
 
         ++i;
-        cont = this->predictor->ReceiveResponse(this->predictorID, &response) == 0;
+        cont =
+            this->predictor->ReceiveResponse(this->predictorID, &response) == 0;
     }
 
     return ret;
@@ -292,7 +296,7 @@ int BoomFetch::ClockCheckBTB() {
 
     next = 0;
     bool cont = this->btb->ReceiveResponse(this->btbID, &response) == 0;
-    
+
     if (!cont) return 1;
     while (cont) {
         i = 0;
@@ -436,7 +440,6 @@ void BoomFetch::Clock() {
 }
 
 void BoomFetch::PrintStatistics() {
-    SINUCA3_LOG_PRINTF("Boom Fetch [%p]\n", this);
     this->btb->PrintStatistics();
     this->ras->PrintStatistics();
 }

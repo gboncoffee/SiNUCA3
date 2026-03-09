@@ -22,8 +22,8 @@
 
 #include "memory_trace_writer.hpp"
 
-#include "tracer/sinuca/file_handler.hpp"
-#include "utils/logging.hpp"
+#include <sinuca3.hpp>
+#include <tracer/sinuca/file_handler.hpp>
 
 extern "C" {
 #include <alloca.h>
@@ -67,7 +67,7 @@ int MemoryTraceWriter::FlushRecordArray() {
 int MemoryTraceWriter::CheckRecordArray() {
     if (this->IsRecordArrayFull()) {
         if (this->FlushRecordArray()) {
-            SINUCA3_ERROR_PRINTF("Failed to flush mem record array!\n")
+            SINUCA3_ERROR_PRINTF("Failed to flush mem record array!\n");
             return 1;
         }
         this->ResetRecordArray();

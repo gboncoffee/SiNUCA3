@@ -23,21 +23,21 @@
 #include "dynamic_trace_reader.hpp"
 
 #include <cstdlib>
+#include <sinuca3.hpp>
 
 #include "tracer/sinuca/file_handler.hpp"
-#include "utils/logging.hpp"
 
 extern "C" {
 #include <alloca.h>
 }
 
-int DynamicTraceReader::OpenFile(const char *sourceDir, const char *imageName,
+int DynamicTraceReader::OpenFile(const char* sourceDir, const char* imageName,
                                  int tid) {
     unsigned long bufferSize;
-    char *path;
+    char* path;
 
     bufferSize = GetPathTidInSize(sourceDir, "dynamic", imageName);
-    path = (char *)alloca(bufferSize);
+    path = (char*)alloca(bufferSize);
     FormatPathTidIn(path, sourceDir, "dynamic", imageName, tid, bufferSize);
     this->file = fopen(path, "rb");
     if (this->file == NULL) {
@@ -54,8 +54,7 @@ int DynamicTraceReader::OpenFile(const char *sourceDir, const char *imageName,
 
 int DynamicTraceReader::ReadDynamicRecord() {
     if (this->reachedEnd) {
-        SINUCA3_ERROR_PRINTF(
-            "[ReadDynamicRecord] already reached end in dynamic trace file!\n");
+        SINUCA3_ERROR_PRINTF("already reached end in dynamic trace file!\n");
         return 1;
     }
 

@@ -44,7 +44,7 @@ class StaticTraceWriter {
     StaticTraceRecord* basicBlock; /**<Current basic block. */
     int basicBlockArraySize;       /**<Current size of the buffer. */
     int basicBlockOccupation;
-    int currentBasicBlockSize;     /**<Number of instructions in the bbl. */
+    int currentBasicBlockSize; /**<Number of instructions in the bbl. */
 
     inline void ResetBasicBlock() {
         this->basicBlockOccupation = 1;
@@ -74,7 +74,7 @@ class StaticTraceWriter {
     };
     inline ~StaticTraceWriter() {
         if (this->header.FlushHeader(this->file)) {
-            SINUCA3_ERROR_PRINTF("Failed to write static header!\n")
+            SINUCA3_ERROR_PRINTF("Failed to write static header!\n");
         }
         if (!this->WasBasicBlockReset()) {
             SINUCA3_ERROR_PRINTF("Last basic block is incomplete!\n");

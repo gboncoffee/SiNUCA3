@@ -33,8 +33,6 @@
 #include <vector>
 #include <yaml/yaml_parser.hpp>
 
-#include "utils/logging.hpp"
-
 // Include our testing facilities in debug mode.
 #ifndef NDEBUG
 #include <tests.hpp>

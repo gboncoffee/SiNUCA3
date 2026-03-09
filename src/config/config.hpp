@@ -26,7 +26,7 @@
 #include <cassert>
 #include <engine/build_definitions.hpp>
 #include <engine/component.hpp>
-#include <utils/logging.hpp>
+#include <utils/logger.hpp>
 #include <utils/map.hpp>
 #include <vector>
 #include <yaml/yaml_parser.hpp>
