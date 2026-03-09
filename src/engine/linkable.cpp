@@ -22,6 +22,8 @@
 
 #include "linkable.hpp"
 
+#include <cstddef>
+
 void Connection::CreateBuffers(int bufferSize, int messageSize) {
     this->bufferSize = bufferSize;
     this->messageSize = messageSize;
@@ -67,6 +69,20 @@ void Connection::SwapBuffers() {
 
     this->requestBuffers[SOURCE_ID]->Flush();
     this->responseBuffers[DEST_ID]->Flush();
+}
+
+void Connection::PushBuffers() {
+    void* message = NULL;
+
+    while (!this->requestBuffers[SOURCE_ID]->IsEmpty()) {
+        this->requestBuffers[SOURCE_ID]->Dequeue(message);
+        this->requestBuffers[DEST_ID]->Enqueue(message);
+    }
+
+    while (!this->responseBuffers[DEST_ID]->IsEmpty()) {
+        this->responseBuffers[DEST_ID]->Dequeue(message);
+        this->responseBuffers[SOURCE_ID]->Enqueue(message);
+    }
 }
 
 bool Connection::InsertIntoRequestBuffer(int id, void* messageInput) {

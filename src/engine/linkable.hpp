@@ -43,7 +43,7 @@ struct Connection {
                                            swapped each cycle.*/
 
   public:
-    Connection() : bufferSize(0), messageSize(0) {};
+    Connection() : bufferSize(0), messageSize(0){};
 
     /**
      * @brief Allocate the buffers used to channels
@@ -77,6 +77,11 @@ struct Connection {
      * @brief Swap the buffers of the connection.
      */
     void SwapBuffers();
+
+    /**
+     * @brief Pushes messages from one buffer to another.
+     */
+    void PushBuffers();
 
     /**
      * @brief Insert a message into a requestBuffer.
