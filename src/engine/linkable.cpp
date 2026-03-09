@@ -22,7 +22,7 @@
 
 #include "linkable.hpp"
 
-#include <cstddef>
+#include "utils/logging.hpp"
 
 void Connection::CreateBuffers(int bufferSize, int messageSize) {
     this->bufferSize = bufferSize;
@@ -39,6 +39,8 @@ void Connection::CreateBuffers(int bufferSize, int messageSize) {
 
     this->responseBuffers[0]->Allocate(bufferSize, messageSize);
     this->responseBuffers[1]->Allocate(bufferSize, messageSize);
+
+    this->swapBuffer = new char[messageSize];
 }
 
 void Connection::DeleteBuffers() {
@@ -46,6 +48,7 @@ void Connection::DeleteBuffers() {
     delete this->requestBuffers[1];
     delete this->responseBuffers[0];
     delete this->responseBuffers[1];
+    if (this->swapBuffer) delete[] this->swapBuffer;
 }
 
 inline int Connection::GetBufferSize() const { return this->bufferSize; }
@@ -72,14 +75,18 @@ void Connection::SwapBuffers() {
 }
 
 void Connection::PushBuffers() {
-    void* message = NULL;
+    char* message = this->swapBuffer;
 
     while (!this->requestBuffers[SOURCE_ID]->IsEmpty()) {
+        SINUCA3_DEBUG_PRINTF("Req Size: %d\n",
+                             this->requestBuffers[SOURCE_ID]->GetSize())
         this->requestBuffers[SOURCE_ID]->Dequeue(message);
         this->requestBuffers[DEST_ID]->Enqueue(message);
     }
 
     while (!this->responseBuffers[DEST_ID]->IsEmpty()) {
+        SINUCA3_DEBUG_PRINTF("Res Size: %d\n",
+                             this->responseBuffers[DEST_ID]->GetSize())
         this->responseBuffers[DEST_ID]->Dequeue(message);
         this->responseBuffers[SOURCE_ID]->Enqueue(message);
     }

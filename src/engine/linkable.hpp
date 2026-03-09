@@ -24,6 +24,7 @@
  */
 
 // #include <config/config.hpp>
+#include <cstddef>
 #include <utils/circular_buffer.hpp>
 #include <vector>
 
@@ -37,13 +38,14 @@ struct Connection {
   private:
     int bufferSize;
     int messageSize;
+    char* swapBuffer;
     CircularBuffer* requestBuffers[2]; /**<Array of the request buffers, swapped
                                           each cycle.*/
     CircularBuffer* responseBuffers[2]; /**<Array of the response buffers,
                                            swapped each cycle.*/
 
   public:
-    Connection() : bufferSize(0), messageSize(0){};
+    Connection() : bufferSize(0), messageSize(0), swapBuffer(NULL){};
 
     /**
      * @brief Allocate the buffers used to channels
