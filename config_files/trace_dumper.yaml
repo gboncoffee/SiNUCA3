@@ -1,0 +1,4 @@
+traceDumper: &traceDumper
+  class: TraceDumperComponent
+  fetch: *ENGINE
+  default: true
