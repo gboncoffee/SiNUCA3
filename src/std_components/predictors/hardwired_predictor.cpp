@@ -50,7 +50,7 @@ void HardwiredPredictor::Respond(int id, PredictorPacket request) {
     bool predict = true;
 
     // TODO: check if this is the right fix
-    if (instruction.staticInfo->branchType != BranchNone) {
+    if (instruction.staticInfo->branchType == BranchNone) {
         ++this->numberOfNoBranchs;
         predict = this->noBranch;
     } else {
