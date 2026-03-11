@@ -26,6 +26,9 @@
 #include <cstring>
 #include <utils/arena.hpp>
 
+/**
+ * @brief Declarations for a write-only map with strings as keys.
+ */
 namespace map {
 
 /**
@@ -45,6 +48,9 @@ const int M = 4096;
  */
 unsigned int Hash(const unsigned char* const buffer, unsigned long size);
 
+/**
+ * @brief Stores an element of a Map.
+ */
 template <typename Element>
 struct Node {
     Node* next;
