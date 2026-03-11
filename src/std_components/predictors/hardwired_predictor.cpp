@@ -25,7 +25,6 @@
 
 #include <cstring>
 #include <sinuca3.hpp>
-#include "engine/default_packets.hpp"
 
 #include "engine/default_packets.hpp"
 
@@ -50,8 +49,7 @@ void HardwiredPredictor::Respond(int id, PredictorPacket request) {
     const InstructionPacket instruction = request.data.requestQuery;
     bool predict = true;
 
-    // TODO: check if this is the right fix
-    if (instruction.staticInfo->branchType != BranchNone) {
+    if (instruction.staticInfo->branchType == BranchNone) {
         ++this->numberOfNoBranchs;
         predict = this->noBranch;
     } else {
