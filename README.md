@@ -39,6 +39,26 @@ If you play with any header file, you'll unfortunatelly have to `make -B`
 because our build system does not automatically rebuilds sources when their
 headers have changed.
 
+## How to use the simulator/how it works
+
+SiNUCA3 instantiates a system by reading YAML configuration files. Example
+files are provided in `config_files/`. The system simulates the execution of
+instructions from trace files.
+
+One starts the simulator as:
+
+```sh
+./sinuca3 -c <config file> -d <trace directory> -t <trace name>
+```
+
+To generate traces, refer to each architecture tracer documentation.
+
+Configuration files define the system in terms of components. In modern
+pipelined architectures, a component will usually simulate the behaviour of a
+specific part of a pipeline stage. During the simulation, a component runs it's
+`Clock` method each cycle, and it can read and send messages from other
+components.
+
 ## Project structure
 
 As said in building, you can just throw a .cpp or .c file inside `src/` and
@@ -76,6 +96,17 @@ files.
 Also, the project is documented with Doxygen, so remember of the documentation
 comments.
 
+One very important design philosophy in SiNUCA3 is that everything should be
+explicit for the *developer*, but most things should be hidden from the *user*.
+This means that when developing the simulator, user-facing APIs should seek to
+give nice abstractions around the implementation, while the code developers use
+should seek to be clear and explicit about what it's actually doing.
+
+Also, avoid writing "meta-components" or any other abstraction on top of the
+component system. There's only one, direct way of writing a component: Creating
+a class that inherit `Component<T>` and implementing it's clock algorithm there.
+Abstractions in the name of code reuse will make everyone's life harder.
+
 We mostly follow [Google's C++ Style
 Guide](https://google.github.io/styleguide/cppguide.html) with some extensions:
 
@@ -96,7 +127,7 @@ Guide](https://google.github.io/styleguide/cppguide.html) with some extensions:
   pointers and move semantics as we're stuck in C++98.
 - We do not have `cpplint.py`.
 - Don't use friend classes.
-- Use `cstdio` instead of `iostream`.
+- Use `cstdio` instead of `iostream`. Actually, use the SINUCA3_*_PRINTF macros.
 - Use `NULL` for null-pointers as we're stuck in C++98.
 - Don't use type deduction.
 - No boost library is aprooved.

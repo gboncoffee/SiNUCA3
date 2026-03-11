@@ -1,0 +1,19 @@
+# This is an example SiNUCA3 configuration file.
+
+# This defines a new component configuration, but doesn't "instantiates" it.
+# It only defines a configuration called "iMemory"
+iMemory:
+  # class is required for every configuration. It's literally the C++ class that
+  # implements this component.
+  class: SimpleMemory
+
+# To define a configuration and instantiate a component with this configuration,
+# one uses &. This defines a configuration called "dMemory" and instantiates a
+# component called "sharedDMemory".
+dMemory: &sharedDMemory
+  class: SimpleMemory
+
+core1: &core1
+  class: SimpleCore
+  instructionMemory: iMemory
+  dataMemory: *sharedDMemory
