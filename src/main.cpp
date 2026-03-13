@@ -33,6 +33,8 @@
 #include <vector>
 #include <yaml/yaml_parser.hpp>
 
+#include "utils/logger.hpp"
+
 // Include our testing facilities in debug mode.
 #ifndef NDEBUG
 #include <tests.hpp>
@@ -42,7 +44,7 @@
  * @brief Prints licensing information.
  */
 void license() {
-    SINUCA3_LOG_PRINTF(
+    printf(
         "SiNUCA 3 - Simulator of Non-Uniform Cache Architectures, Third "
         "iteration.\n"
         "\n"
@@ -71,16 +73,17 @@ void license() {
  */
 void usage() {
     license();
-    SINUCA3_LOG_PRINTF("\n");
+    printf("\n");
     // TODO: Make this pretty.
-    SINUCA3_LOG_PRINTF(
+    printf(
         "Use -h to see this text, -c to set a configuration file (required for "
         "simulation), -t to set a trace (also required for simulation) and -l "
         "to see license information.\n"
         "\n"
         "Other simulation options:\n"
         "   -T <string> sets the trace reader to use (orcs, foo, bar, "
-        "TODO...)\n");
+        "TODO...)\n"
+        "   -L<0..3> sets the log level\n");
 }
 
 /**
@@ -104,17 +107,20 @@ int main(int argc, char* const argv[]) {
     const char* traceFileName = NULL;
     char nextOpt;
 
-    // When compiling debug mode, enable our testing facilities.
+    // When compiling debug mode, enable our testing facilities and set the log
+    // level to debug.
 #ifdef NDEBUG
-#define SINUCA3_SWITCHES "lc:t:d:T:"
+    logger::Level logLevel = logger::LEVEL_INFO;
+#define SINUCA3_SWITCHES "lc:t:d:T:L:"
 #else
-#define SINUCA3_SWITCHES "r:lc:t:d:T:"
+    logger::Level logLevel = logger::LEVEL_DEBUG;
+#define SINUCA3_SWITCHES "r:lc:t:d:T:L:"
     const char* testToRun = NULL;
 #endif
 
     while ((nextOpt = getopt(argc, argv, SINUCA3_SWITCHES)) != -1) {
         switch (nextOpt) {
-            // When compiling debug mode, enable our testing facilities.
+            // When compiling in debug mode, enable our testing facilities.
 #ifndef NDEBUG
             case 'r':
                 testToRun = optarg;
@@ -138,7 +144,18 @@ int main(int argc, char* const argv[]) {
             case 'h':
                 usage();
                 return 0;
+            case 'L':
+                if (sscanf(optarg, "%d", &logLevel) != 1) {
+                    SINUCA3_ERROR_PRINTF(
+                        "Argument passed to -L is not an integer.\n");
+                    return 1;
+                }
         }
+    }
+
+    if (SINUCA3_SET_LOG_LEVEL(logLevel) != 0) {
+        SINUCA3_ERROR_PRINTF("Log level too big.\n");
+        return 1;
     }
 
     // When compiling debug mode and there's a test to run, run it.

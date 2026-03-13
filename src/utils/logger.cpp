@@ -23,6 +23,7 @@
 
 #include "logger.hpp"
 
+#include <cassert>
 #include <cstdio>
 #include <cstring>
 
@@ -36,20 +37,34 @@
 #define FILENO fileno
 #endif
 
-logger::Logger* logger::Logger::instance() {
+logger::Logger* logger::Logger::Instance() {
     static Logger logger;
     return &logger;
 }
 
-void logger::Logger::log(const Level level, const char* file, const int line,
-                         const char* function, const char* format, ...) {
+void logger::Logger::Log(const logger::Level level, const char* file,
+                         const int line, const char* function,
+                         const char* format, ...) {
     va_list args;
     va_start(args, format);
-    vlog(level, file, line, function, format, args);
+    this->Vlog(level, file, line, function, format, args);
     va_end(args);
 }
 
-const char* logger::Logger::level_to_string(const Level level) {
+int logger::Logger::SetLevel(const logger::Level level) {
+#ifndef NDEBUG
+    const int max = logger::LEVEL_DEBUG;
+#else
+    const int max = logger::LEVEL_INFO;
+#endif
+    if (level > max) return 1;
+    minLevel = level;
+    return 0;
+}
+
+logger::Level logger::Logger::GetLevel() const { return minLevel; }
+
+const char* logger::Logger::Level2String(const Level level) {
     switch (level) {
         case LEVEL_ERROR:
             return "ERROR";
@@ -57,71 +72,76 @@ const char* logger::Logger::level_to_string(const Level level) {
             return "WARNING";
         case LEVEL_INFO:
             return "INFO";
+#ifndef NDEBUG
         case LEVEL_DEBUG:
             return "DEBUG";
+#endif
         default:
             assert(0 && "unreachable");
     }
 }
 
-void logger::Logger::vlog(const Level level, const char* file, const int line,
+void logger::Logger::Vlog(const Level level, const char* file, const int line,
                           const char* function, const char* format,
                           va_list args) {
+    // Filter out messages below the configured minimum level. Levels are
+    // ordered from most severe (LEVEL_ERROR = 0) to most verbose
+    // (LEVEL_DEBUG = 3). If the message level is greater (less severe) than
+    // the configured minimum, do not print it.
+    if (level > this->minLevel) {
+        return;
+    }
+
     FILE* output =
         (level == LEVEL_ERROR || level == LEVEL_WARNING) ? stderr : stdout;
 
-    /* Print only the basename of the source file (not the full path). */
+    // Print only the basename of the source file (not the full path).
+#ifdef _WIN32
     const char* base = file;
-    const char* last_slash = strrchr(file, '/');
-    const char* last_back = strrchr(file, '\\');
-    const char* last = NULL;
-    if (last_slash && last_back) {
-        last = (last_slash > last_back) ? last_slash : last_back;
-    } else if (last_slash) {
-        last = last_slash;
-    } else if (last_back) {
-        last = last_back;
-    }
-    if (last) base = last + 1;
+    const char* lastBack = strrchr(file, '\\');
+    if (lastBack) base = lastBack + 1;
+#else
+    const char* base = file;
+    const char* lastSlash = strrchr(file, '/');
+    if (lastSlash) base = lastSlash + 1;
+#endif
 
-    /*
-     * Add colors for different levels when output is a terminal. Use ANSI
-     * escape sequences and only enable them if the output file descriptor is a
-     * tty. Use a separate color for the file/function names.
-     */
-    const char* level_color = "";
-    const char* name_color = "";
-    const char* color_end = "";
+    // Add colors for different levels when output is a terminal. Use ANSI
+    // escape sequences and only enable them if the output file descriptor is a
+    // tty. Use a separate color for the file/function names.
+    const char* levelColor = "";
+    const char* nameColor = "";
+    const char* colorEnd = "";
     int fd = FILENO(output);
     if (ISATTY(fd)) {
         switch (level) {
             case LEVEL_ERROR:
-                level_color = "\x1b[31m"; /* red */
-                name_color = "\x1b[35m";  /* magenta for file/function */
+                levelColor = "\x1b[31m";  // Red.
+                nameColor = "\x1b[35m";   // Magenta for file/function.
                 break;
             case LEVEL_WARNING:
-                level_color = "\x1b[33m"; /* yellow */
-                name_color = "\x1b[35m";  /* magenta for file/function */
+                levelColor = "\x1b[33m";  // Yellow.
+                nameColor = "\x1b[35m";   // Magenta for file/function.
                 break;
             case LEVEL_INFO:
-                level_color = "\x1b[32m"; /* green */
-                name_color = "\x1b[34m";  /* blue for file/function */
+                levelColor = "\x1b[32m";  // Green.
+                nameColor = "\x1b[34m";   // Blue for file/function.
                 break;
+#ifndef NDEBUG
             case LEVEL_DEBUG:
-                level_color = "\x1b[36m"; /* cyan */
-                name_color = "\x1b[34m";  /* blue for file/function */
+                levelColor = "\x1b[36m";  // Cyan.
+                nameColor = "\x1b[34m";   // Blue for file/function.
                 break;
+#endif
             default:
-                level_color = "";
-                name_color = "";
+                assert(0 && "Unreachable");
         }
-        color_end = "\x1b[0m";
+        colorEnd = "\x1b[0m";
     }
 
     /* Print level with its color, then the file in the terminal's default
      * color, and the function name in the distinct name color. */
-    fprintf(output, "%s[%s]%s[%s:%d]%s[%s]%s ", level_color,
-            level_to_string(level), color_end, base, line, name_color, function,
-            color_end);
+    fprintf(output, "%s[%s]%s[%s:%d]%s[%s]%s ", levelColor, Level2String(level),
+            colorEnd, base, line, nameColor, function, colorEnd);
     vfprintf(output, format, args);
 }
