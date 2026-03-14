@@ -22,9 +22,8 @@
 
 #include <cassert>
 #include <cstring>
+#include <utils/logger.hpp>
 #include <utils/map.hpp>
-
-#include "utils/logging.hpp"
 
 unsigned int map::Hash(const unsigned char* const buffer, unsigned long size) {
     if (size <= 0) return 0;

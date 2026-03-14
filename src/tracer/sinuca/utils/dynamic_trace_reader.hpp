@@ -25,9 +25,8 @@
  */
 
 #include <cstdio>
+#include <sinuca3.hpp>
 #include <tracer/sinuca/file_handler.hpp>
-
-#include "utils/logging.hpp"
 
 /** @brief Check dynamic_trace_reader.hpp documentation for details */
 class DynamicTraceReader {
@@ -48,7 +47,8 @@ class DynamicTraceReader {
         if (file) {
             fclose(this->file);
         }
-        if (!this->reachedEnd && this->recordArrayIndex != numberOfRecordsRead) {
+        if (!this->reachedEnd &&
+            this->recordArrayIndex != numberOfRecordsRead) {
             SINUCA3_WARNING_PRINTF(
                 "Basic block ids may have been left unread\n");
         }
@@ -62,17 +62,16 @@ class DynamicTraceReader {
     }
     inline DynamicTraceRecordType GetRecordType() {
         return (DynamicTraceRecordType)this->recordArray[this->recordArrayIndex]
-        .recordType;
+            .recordType;
     }
     inline unsigned int GetBasicBlockIdentifier() {
-        return this->recordArray[this->recordArrayIndex]
-        .data.basicBlockId;
+        return this->recordArray[this->recordArrayIndex].data.basicBlockId;
     }
     inline ThreadEventType GetThreadEvent() {
-        return (ThreadEventType)this->recordArray[this->recordArrayIndex].data
-        .threadEvent;
+        return (ThreadEventType)this->recordArray[this->recordArrayIndex]
+            .data.threadEvent;
     }
-    
+
     inline bool HasReachedEnd() { return this->reachedEnd; }
     inline unsigned int GetVersionInt() { return this->header.traceVersion; }
     inline unsigned int GetTargetInt() { return this->header.targetArch; }

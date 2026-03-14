@@ -143,7 +143,7 @@ int Engine::SendBufferedAndFetch(int id) {
     // must ensure the buffers never fills.
     if (this->SendResponseToConnection(id, (FetchPacket*)&toSend) != 0) {
         SINUCA3_WARNING_PRINTF(
-            "engine: == INSTRUCTION DROP DETECTED == core %d made requests "
+            "== INSTRUCTION DROP DETECTED == core %d made requests "
             "with a full buffer, instructions will be dropped.\n",
             id);
     }
@@ -189,8 +189,8 @@ void Engine::Clock() {
 }
 
 void Engine::PrintStatistics() {
-    SINUCA3_LOG_PRINTF("engine: Cycled %lu times.\n", this->totalCycles);
-    SINUCA3_LOG_PRINTF("engine: Fetched %lu instructions.\n",
+    SINUCA3_LOG_PRINTF("Cycled %lu times.\n", this->totalCycles);
+    SINUCA3_LOG_PRINTF("Fetched %lu instructions.\n",
                        this->fetchedInstructions);
 }
 
@@ -205,14 +205,13 @@ unsigned long Engine::GetTraceSize() {
 void Engine::PrintTime(time_t start, unsigned long cycle) {
     const unsigned long remaining = this->traceSize - this->fetchedInstructions;
 
-    SINUCA3_LOG_PRINTF("engine: Heartbeat at cycle %ld.\n", cycle);
-    SINUCA3_LOG_PRINTF("engine: Remaining instructions: %ld.\n", remaining);
+    SINUCA3_LOG_PRINTF("Heartbeat at cycle %ld.\n", cycle);
+    SINUCA3_LOG_PRINTF("Remaining instructions: %ld.\n", remaining);
 
     const time_t now = time(NULL);
     const time_t estimatedEnd =
         remaining == 0 ? now : (traceSize * (now - start) / remaining) + start;
-    SINUCA3_LOG_PRINTF("engine: Estimated simulation end: %s",
-                       ctime(&estimatedEnd));
+    SINUCA3_LOG_PRINTF("Estimated simulation end: %s", ctime(&estimatedEnd));
 }
 
 int Engine::SetupSimulation(TraceReader* traceReader) {
@@ -241,8 +240,8 @@ int Engine::Simulate(TraceReader* traceReader) {
 
     const time_t start = time(NULL);
 
-    SINUCA3_LOG_PRINTF("engine: Simulation started at %s", ctime(&start));
-    SINUCA3_LOG_PRINTF("engine: Total instructions: %ld.\n", this->traceSize);
+    SINUCA3_LOG_PRINTF("Simulation started at %s", ctime(&start));
+    SINUCA3_LOG_PRINTF("Total instructions: %ld.\n", this->traceSize);
 
     while (!this->end && !this->error) {
         if ((this->totalCycles + 1) % (1 << 8) == 0)
@@ -258,7 +257,7 @@ int Engine::Simulate(TraceReader* traceReader) {
     }
 
     const time_t end = time(NULL);
-    SINUCA3_LOG_PRINTF("engine: Simulation ended at %s", ctime(&end));
+    SINUCA3_LOG_PRINTF("Simulation ended at %s", ctime(&end));
     SINUCA3_LOG_PRINTF("=== SIMULATION STATISTICS ===\n");
 
     if (this->error) {

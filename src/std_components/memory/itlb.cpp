@@ -23,10 +23,7 @@
 #include "itlb.hpp"
 
 #include <sinuca3.hpp>
-
-#include "config/config.hpp"
-#include "utils/cache/cacheMemory.hpp"
-#include "utils/logging.hpp"
+#include <utils/cache/cacheMemory.hpp>
 
 int iTLB::Configure(Config config) {
     const char* tempStr_Policy = "lru";  // lru is default
@@ -126,9 +123,9 @@ void iTLB::Clock() {
 
 void iTLB::PrintStatistics() {
     SINUCA3_DEBUG_PRINTF(
-        "%p: iTLB Stats:\n\tMiss: %lu\n\tHit: %lu\n\tAcces: "
+        "iTLB Stats:\n\tMiss: %lu\n\tHit: %lu\n\tAcces: "
         "%lu\n\tEvaction: %lu\n\tValidProp: %.3f\n",
-        this, this->cache->getStatMiss(), this->cache->getStatHit(),
+        this->cache->getStatMiss(), this->cache->getStatHit(),
         this->cache->getStatAcess(), this->cache->getStatEvaction(),
         this->cache->getStatValidProp());
 }

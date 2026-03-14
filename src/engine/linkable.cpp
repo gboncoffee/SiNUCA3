@@ -22,7 +22,7 @@
 
 #include "linkable.hpp"
 
-#include "utils/logging.hpp"
+#include <utils/logger.hpp>
 
 void Connection::CreateBuffers(int bufferSize, int messageSize) {
     this->bufferSize = bufferSize;
@@ -79,14 +79,14 @@ void Connection::PushBuffers() {
 
     while (!this->requestBuffers[SOURCE_ID]->IsEmpty()) {
         SINUCA3_DEBUG_PRINTF("Req Size: %d\n",
-                             this->requestBuffers[SOURCE_ID]->GetSize())
+                             this->requestBuffers[SOURCE_ID]->GetSize());
         this->requestBuffers[SOURCE_ID]->Dequeue(message);
         this->requestBuffers[DEST_ID]->Enqueue(message);
     }
 
     while (!this->responseBuffers[DEST_ID]->IsEmpty()) {
         SINUCA3_DEBUG_PRINTF("Res Size: %d\n",
-                             this->responseBuffers[DEST_ID]->GetSize())
+                             this->responseBuffers[DEST_ID]->GetSize());
         this->responseBuffers[DEST_ID]->Dequeue(message);
         this->responseBuffers[SOURCE_ID]->Enqueue(message);
     }

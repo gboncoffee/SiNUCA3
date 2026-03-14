@@ -23,9 +23,8 @@
 #include "static_trace_writer.hpp"
 
 #include <cstdlib>
-
-#include "tracer/sinuca/file_handler.hpp"
-#include "utils/logging.hpp"
+#include <sinuca3.hpp>
+#include <tracer/sinuca/file_handler.hpp>
 
 extern "C" {
 #include <alloca.h>

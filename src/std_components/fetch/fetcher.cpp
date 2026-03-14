@@ -212,10 +212,9 @@ void Fetcher::Clock() {
 }
 
 void Fetcher::PrintStatistics() {
-    SINUCA3_LOG_PRINTF("Fetcher %p: %lu fetched instructions.\n", this,
+    SINUCA3_LOG_PRINTF("%lu fetched instructions.\n",
                        this->fetchedInstructions);
-    SINUCA3_LOG_PRINTF("Fetcher %p: %lu misspredictions.\n", this,
-                       this->misspredictions);
+    SINUCA3_LOG_PRINTF("%lu misspredictions.\n", this->misspredictions);
 }
 
 Fetcher::~Fetcher() {

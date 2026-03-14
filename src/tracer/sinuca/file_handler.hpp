@@ -25,9 +25,7 @@
 
 #include <cstdio>
 #include <cstring>
-
-#include "engine/default_packets.hpp"
-#include "utils/logging.hpp"
+#include <sinuca3.hpp>
 
 extern "C" {
 #include <alloca.h>
@@ -167,19 +165,19 @@ struct FileHeader {
     }
 
     /** @brief Write header to file. */
-    int FlushHeader(FILE *file);
+    int FlushHeader(FILE* file);
     /** @brief Read header from file. */
-    int LoadHeader(FILE *file);
+    int LoadHeader(FILE* file);
     /** @brief Read header from file if it is mapped to virtual memory. */
-    int LoadHeader(char *file, unsigned long *fileOffset);
+    int LoadHeader(char* file, unsigned long* fileOffset);
     /** @brief Adjust file pointer. The header is generally written at file
      * clousure, so the file ptr must be moved to leave enough space for it. */
-    void ReserveHeaderSpace(FILE *file);
+    void ReserveHeaderSpace(FILE* file);
     /** @brief Set header type and prefix. */
     void SetHeaderType(uint8_t fileType);
 } _PACKED;
 
-inline void printFileErrorLog(const char *path, const char *mode) {
+inline void printFileErrorLog(const char* path, const char* mode) {
     SINUCA3_ERROR_PRINTF("Could not open [%s] in [%s] mode: ", path, mode);
     SINUCA3_ERROR_PRINTF("%s\n", strerror(errno));
 }
@@ -190,8 +188,8 @@ inline void printFileErrorLog(const char *path, const char *mode) {
  * @param prefix 'dynamic', 'memory' or 'static'.
  * @param imageName Name of the executable used to generate the traces.
  */
-unsigned long GetPathTidInSize(const char *sourceDir, const char *prefix,
-                               const char *imageName);
+unsigned long GetPathTidInSize(const char* sourceDir, const char* prefix,
+                               const char* imageName);
 
 /**
  * @brief Format the path in dest string including the thread id.
@@ -201,8 +199,8 @@ unsigned long GetPathTidInSize(const char *sourceDir, const char *prefix,
  * @param tid Thread identier
  * @param destSize Max capacity of dest string.
  */
-void FormatPathTidIn(char *dest, const char *sourceDir, const char *prefix,
-                     const char *imageName, int tid, long destSize);
+void FormatPathTidIn(char* dest, const char* sourceDir, const char* prefix,
+                     const char* imageName, int tid, long destSize);
 
 /**
  * @brief Get size of the formatted path string without the thread id.
@@ -210,8 +208,8 @@ void FormatPathTidIn(char *dest, const char *sourceDir, const char *prefix,
  * @param prefix 'dynamic', 'memory' or 'static'
  * @param imageName Name of the executable used to generate the traces.
  */
-unsigned long GetPathTidOutSize(const char *sourceDir, const char *prefix,
-                                const char *imageName);
+unsigned long GetPathTidOutSize(const char* sourceDir, const char* prefix,
+                                const char* imageName);
 
 /**
  * @brief Format the path in dest string without the thread id.
@@ -220,7 +218,7 @@ unsigned long GetPathTidOutSize(const char *sourceDir, const char *prefix,
  * @param imageName Name of the executable used to generate the traces.
  * @param destSize Max capacity of dest string.
  */
-void FormatPathTidOut(char *dest, const char *sourceDir, const char *prefix,
-                      const char *imageName, long destSize);
+void FormatPathTidOut(char* dest, const char* sourceDir, const char* prefix,
+                      const char* imageName, long destSize);
 
 #endif

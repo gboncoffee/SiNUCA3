@@ -24,8 +24,8 @@
 
 #include <cassert>
 #include <cstdlib>
+#include <sinuca3.hpp>
 #include <utils/cache/cacheMemory.hpp>
-#include <utils/logging.hpp>
 
 namespace ReplacementPolicies {
 

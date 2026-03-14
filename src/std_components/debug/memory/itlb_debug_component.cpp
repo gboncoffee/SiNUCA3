@@ -1,6 +1,5 @@
-#include "config/config.hpp"
-#include "std_components/memory/itlb.hpp"
-#include "utils/logging.hpp"
+#include <sinuca3.hpp>
+#include <std_components/memory/itlb.hpp>
 #ifndef NDEBUG
 
 //
@@ -26,7 +25,6 @@
  * BE INCLUDED BY CODE PATHS THAT ONLY COMPILE IN DEBUG MODE.
  */
 
-#include <cstdio>
 #include <sinuca3.hpp>
 
 #include "itlb_debug_component.hpp"
@@ -110,7 +108,7 @@ void iTLBDebugComponent::Clock() {
 }
 
 void iTLBDebugComponent::PrintStatistics() {
-    SINUCA3_LOG_PRINTF("EngineDebugComponent %p: printing statistics\n", this);
+    SINUCA3_LOG_PRINTF("printing statistics\n", this);
 }
 
 iTLBDebugComponent::~iTLBDebugComponent() {}

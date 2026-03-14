@@ -63,51 +63,49 @@ void TraceDumperComponent::Clock() {
     this->fetch->SendRequest(this->fetchID, &fetch);
     if (this->fetch->ReceiveResponse(this->fetchID, &fetch) == 0) {
         InstructionPacket instruction = fetch.response;
-        if (this->def ^ this->IsOverride(instruction.staticInfo->instMnemonic)) {
+        if (this->def ^
+            this->IsOverride(instruction.staticInfo->instMnemonic)) {
             ++this->fetched;
-          SINUCA3_LOG_PRINTF("TraceDumperComponent %p: Fetched {\n", this);
-            SINUCA3_LOG_PRINTF("  instMnemonic: %s\n",
+            SINUCA3_LOG_PRINTF("=== NEW INSTRUCTION FETCHED ===\n");
+            SINUCA3_LOG_PRINTF("instMnemonic: %s\n",
                                instruction.staticInfo->instMnemonic);
-            SINUCA3_LOG_PRINTF("  instAddress: %ld\n",
+            SINUCA3_LOG_PRINTF("instAddress: %ld\n",
                                instruction.staticInfo->instAddress);
-            SINUCA3_LOG_PRINTF("  instSize: %lu\n",
+            SINUCA3_LOG_PRINTF("instSize: %lu\n",
                                instruction.staticInfo->instSize);
-          SINUCA3_LOG_PRINTF("  readRegs: [");
-            for (unsigned char i = 0; i < instruction.staticInfo->numberOfReadRegs;
-                 ++i) {
-                SINUCA3_LOG_PRINTF("%u", instruction.staticInfo->readRegsArray[i]);
-                if (i + 1 < instruction.staticInfo->numberOfReadRegs)
-                    SINUCA3_LOG_PRINTF(", ");
+            SINUCA3_LOG_PRINTF("readRegs: [\n");
+            for (unsigned char i = 0;
+                 i < instruction.staticInfo->numberOfReadRegs; ++i) {
+                SINUCA3_LOG_PRINTF("    %u\n",
+                                   instruction.staticInfo->readRegsArray[i]);
             }
             SINUCA3_LOG_PRINTF("]\n");
-          SINUCA3_LOG_PRINTF("  writeRegs: [");
-            for (unsigned char i = 0; i < instruction.staticInfo->numberOfWriteRegs;
-                 ++i) {
-                SINUCA3_LOG_PRINTF("%u", instruction.staticInfo->writtenRegsArray[i]);
-                if (i + 1 < instruction.staticInfo->numberOfWriteRegs)
-                    SINUCA3_LOG_PRINTF(", ");
+            SINUCA3_LOG_PRINTF("writeRegs: [\n");
+            for (unsigned char i = 0;
+                 i < instruction.staticInfo->numberOfWriteRegs; ++i) {
+                SINUCA3_LOG_PRINTF("    %u\n",
+                                   instruction.staticInfo->writtenRegsArray[i]);
             }
             SINUCA3_LOG_PRINTF("]\n");
-          SINUCA3_LOG_PRINTF(
-                "  branchType: %d\n",
+            SINUCA3_LOG_PRINTF(
+                "branchType: %d\n",
                 static_cast<int>(instruction.staticInfo->branchType));
+            SINUCA3_LOG_PRINTF("isIndirect: %s\n",
+                               instruction.staticInfo->isIndirectControlFlowInst
+                                   ? "true"
+                                   : "false");
             SINUCA3_LOG_PRINTF(
-                "  isIndirect: %s\n",
-                instruction.staticInfo->isIndirectControlFlowInst ? "true" : "false");
-            SINUCA3_LOG_PRINTF(
-                "  isPredicated: %s\n",
+                "isPredicated: %s\n",
                 instruction.staticInfo->isPredicatedInst ? "true" : "false");
             SINUCA3_LOG_PRINTF(
-                "  isPrefetch: %s\n",
+                "isPrefetch: %s\n",
                 instruction.staticInfo->isPrefetchHintInst ? "true" : "false");
-            SINUCA3_LOG_PRINTF("}\n");
         }
     }
 }
 
 void TraceDumperComponent::PrintStatistics() {
-    SINUCA3_LOG_PRINTF("TraceDumperComponent %p: fetched %lu instructions.\n",
-                       this, this->fetched);
+    SINUCA3_LOG_PRINTF("fetched %lu instructions.\n", this->fetched);
 }
 
 TraceDumperComponent::~TraceDumperComponent() {

@@ -107,7 +107,7 @@ BranchTargetBuffer::BranchTargetBuffer()
       totalBranch(0),
       queries(0),
       occupation(0),
-      replacements(0){};
+      replacements(0) {};
 
 int BranchTargetBuffer::Configure(Config config) {
     long interleavingFactor;
@@ -276,7 +276,7 @@ void BranchTargetBuffer::Clock() {
             switch (packet.type) {
                 case BTBPacketTypeRequestQuery:
                     SINUCA3_DEBUG_PRINTF(
-                        "[BranchTargetBuffer] %p: consulting instruction [%lx] "
+                        "%p: consulting instruction [%lx] "
                         "%s\n",
                         this, packet.data.requestQuery->instAddress,
                         packet.data.requestQuery->instMnemonic);
@@ -285,8 +285,8 @@ void BranchTargetBuffer::Clock() {
 
                 case BTBPacketTypeRequestAddEntry:
                     SINUCA3_DEBUG_PRINTF(
-                        "[BranchTargetBuffer] %p: adding entry [%lx] %s\n",
-                        this, packet.data.requestQuery->instAddress,
+                        "%p: adding entry [%lx] %s\n", this,
+                        packet.data.requestQuery->instAddress,
                         packet.data.requestQuery->instMnemonic);
                     this->AddEntry(packet.data.requestAddEntry.instruction,
                                    packet.data.requestAddEntry.target);
@@ -294,7 +294,7 @@ void BranchTargetBuffer::Clock() {
 
                 case BTBPacketTypeRequestUpdate:
                     SINUCA3_DEBUG_PRINTF(
-                        "[BranchTargetBuffer] %p: updating [%lx] %s\n", this,
+                        "%p: updating [%lx] %s\n", this,
                         packet.data.requestQuery->instAddress,
                         packet.data.requestQuery->instMnemonic);
                     this->Update(packet.data.requestUpdate.instruction,
@@ -320,17 +320,16 @@ void BranchTargetBuffer::PrintStatistics() {
         if (this->btb[i]->GetValid()) this->occupation++;
     }
 
-    SINUCA3_LOG_PRINTF("Branch Target Buffer [%p]\n", this);
-    SINUCA3_LOG_PRINTF("    Entries: %d\n", this->numEntries);
-    SINUCA3_LOG_PRINTF("    Total Queries: %lu\n", this->queries);
-    SINUCA3_LOG_PRINTF("    Total Branches: %lu\n", this->totalBranch);
-    SINUCA3_LOG_PRINTF("    BTB Hits: %lu\n", this->btbHits);
-    SINUCA3_LOG_PRINTF("    BTB Occupation: %lu\n", this->occupation);
-    SINUCA3_LOG_PRINTF("    Entry Replacements: %lu\n", this->replacements);
-    SINUCA3_LOG_PRINTF("    Hit Ratio: %lf%%\n",
+    SINUCA3_LOG_PRINTF("Entries: %d\n", this->numEntries);
+    SINUCA3_LOG_PRINTF("Total Queries: %lu\n", this->queries);
+    SINUCA3_LOG_PRINTF("Total Branches: %lu\n", this->totalBranch);
+    SINUCA3_LOG_PRINTF("BTB Hits: %lu\n", this->btbHits);
+    SINUCA3_LOG_PRINTF("BTB Occupation: %lu\n", this->occupation);
+    SINUCA3_LOG_PRINTF("Entry Replacements: %lu\n", this->replacements);
+    SINUCA3_LOG_PRINTF("Hit Ratio: %lf%%\n",
                        ((double)this->btbHits / (double)this->queries) * 100);
     SINUCA3_LOG_PRINTF(
-        "    Occupation Ratio: %lf%%\n",
+        "Occupation Ratio: %lf%%\n",
         ((double)this->occupation / (double)this->numEntries) * 100);
 }
 

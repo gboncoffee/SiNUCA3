@@ -28,7 +28,7 @@
 #include <cassert>
 #include <cstdio>
 #include <cstring>
-#include <utils/logging.hpp>
+#include <utils/logger.hpp>
 #include <vector>
 
 static inline yaml::YamlLocation LocationFromMark(const yaml_mark_t mark,
@@ -117,9 +117,8 @@ int yaml::Parser::ParseMapping(const YamlLocation location, const char* anchor,
         }
 #ifndef NDEBUG
         else if (eventType != YAML_MAPPING_END_EVENT) {
-            SINUCA3_DEBUG_PRINTF(
-                "%s:%d: Mapping parser got a strange event: %d\n",
-                __FILE_NAME__, __LINE__, eventType);
+            SINUCA3_DEBUG_PRINTF("Mapping parser got a strange event: %d\n",
+                                 eventType);
         }
 #endif
         yaml_event_delete(&event);
@@ -199,9 +198,8 @@ int yaml::Parser::ParseYamlValueFromEvent(yaml_event_t* event, const char* file,
                 location, (const char*)event->data.mapping_start.anchor, ret);
             break;
         default:
-            SINUCA3_DEBUG_PRINTF(
-                "%s:%d: YamlValue parser got a strange event: %d\n",
-                __FILE_NAME__, __LINE__, event->type);
+            SINUCA3_DEBUG_PRINTF("YamlValue parser got a strange event: %d\n",
+                                 event->type);
             break;
     }
 
