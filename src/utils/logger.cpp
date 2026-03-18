@@ -26,6 +26,7 @@
 #include <cassert>
 #include <cstdio>
 #include <cstring>
+#include <string>
 
 #ifdef _WIN32
 #include <io.h>
@@ -63,6 +64,22 @@ int logger::Logger::SetLevel(const logger::Level level) {
 }
 
 logger::Level logger::Logger::GetLevel() const { return minLevel; }
+
+void logger::Logger::AddFileFilter(const char* basename) {
+    if (basename == NULL) return;
+    this->fileFilters.push_back(std::string(basename));
+}
+
+void logger::Logger::ClearFileFilters() { this->fileFilters.clear(); }
+
+bool logger::Logger::IsFileAllowed(const char* basename) const {
+    if (basename == NULL) return false;
+    if (this->fileFilters.empty()) return true;
+    for (size_t i = 0; i < this->fileFilters.size(); ++i) {
+        if (this->fileFilters[i] == basename) return true;
+    }
+    return false;
+}
 
 const char* logger::Logger::Level2String(const Level level) {
     switch (level) {
@@ -105,6 +122,11 @@ void logger::Logger::Vlog(const Level level, const char* file, const int line,
     const char* lastSlash = strrchr(file, '/');
     if (lastSlash) base = lastSlash + 1;
 #endif
+
+    // If file filters are configured, skip messages that don't match.
+    if (!this->IsFileAllowed(base)) {
+        return;
+    }
 
     // Add colors for different levels when output is a terminal. Use ANSI
     // escape sequences and only enable them if the output file descriptor is a

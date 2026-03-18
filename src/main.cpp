@@ -83,7 +83,8 @@ void usage() {
         "Other simulation options:\n"
         "   -T <string> sets the trace reader to use (orcs, foo, bar, "
         "TODO...)\n"
-        "   -L<0..3> sets the log level\n");
+        "   -L<0..3> sets the log level\n"
+        "   -f<file> adds a logger file filter\n");
 }
 
 /**
@@ -111,10 +112,10 @@ int main(int argc, char* const argv[]) {
     // level to debug.
 #ifdef NDEBUG
     logger::Level logLevel = logger::LEVEL_INFO;
-#define SINUCA3_SWITCHES "lc:t:d:T:L:"
+#define SINUCA3_SWITCHES "lc:t:d:T:L:f:"
 #else
     logger::Level logLevel = logger::LEVEL_DEBUG;
-#define SINUCA3_SWITCHES "r:lc:t:d:T:L:"
+#define SINUCA3_SWITCHES "r:lc:t:d:T:L:f:"
     const char* testToRun = NULL;
 #endif
 
@@ -150,6 +151,10 @@ int main(int argc, char* const argv[]) {
                         "Argument passed to -L is not an integer.\n");
                     return 1;
                 }
+                break;
+            case 'f':
+                SINUCA3_ADD_LOG_FILE_FILTER(optarg);
+                break;
         }
     }
 
