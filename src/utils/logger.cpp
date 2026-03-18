@@ -54,9 +54,9 @@ void logger::Logger::Log(const logger::Level level, const char* file,
 
 int logger::Logger::SetLevel(const logger::Level level) {
 #ifndef NDEBUG
-    const int max = logger::LEVEL_DEBUG;
+    const int max = logger::LevelDebug;
 #else
-    const int max = logger::LEVEL_INFO;
+    const int max = logger::LevelInfo;
 #endif
     if (level > max) return 1;
     minLevel = level;
@@ -83,14 +83,14 @@ bool logger::Logger::IsFileAllowed(const char* basename) const {
 
 const char* logger::Logger::Level2String(const Level level) {
     switch (level) {
-        case LEVEL_ERROR:
+        case LevelError:
             return "ERROR";
-        case LEVEL_WARNING:
+        case LevelWarning:
             return "WARNING";
-        case LEVEL_INFO:
+        case LevelInfo:
             return "INFO";
 #ifndef NDEBUG
-        case LEVEL_DEBUG:
+        case LevelDebug:
             return "DEBUG";
 #endif
         default:
@@ -110,7 +110,7 @@ void logger::Logger::Vlog(const Level level, const char* file, const int line,
     }
 
     FILE* output =
-        (level == LEVEL_ERROR || level == LEVEL_WARNING) ? stderr : stdout;
+        (level == LevelError || level == LevelWarning) ? stderr : stdout;
 
     // Print only the basename of the source file (not the full path).
 #ifdef _WIN32
@@ -137,20 +137,20 @@ void logger::Logger::Vlog(const Level level, const char* file, const int line,
     int fd = FILENO(output);
     if (ISATTY(fd)) {
         switch (level) {
-            case LEVEL_ERROR:
+            case LevelError:
                 levelColor = "\x1b[31m";  // Red.
                 nameColor = "\x1b[35m";   // Magenta for file/function.
                 break;
-            case LEVEL_WARNING:
+            case LevelWarning:
                 levelColor = "\x1b[33m";  // Yellow.
                 nameColor = "\x1b[35m";   // Magenta for file/function.
                 break;
-            case LEVEL_INFO:
+            case LevelInfo:
                 levelColor = "\x1b[32m";  // Green.
                 nameColor = "\x1b[34m";   // Blue for file/function.
                 break;
 #ifndef NDEBUG
-            case LEVEL_DEBUG:
+            case LevelDebug:
                 levelColor = "\x1b[36m";  // Cyan.
                 nameColor = "\x1b[34m";   // Blue for file/function.
                 break;

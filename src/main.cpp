@@ -111,10 +111,10 @@ int main(int argc, char* const argv[]) {
     // When compiling debug mode, enable our testing facilities and set the log
     // level to debug.
 #ifdef NDEBUG
-    logger::Level logLevel = logger::LEVEL_INFO;
+    logger::Level logLevel = logger::LevelInfo;
 #define SINUCA3_SWITCHES "lc:t:d:T:L:f:"
 #else
-    logger::Level logLevel = logger::LEVEL_DEBUG;
+    logger::Level logLevel = logger::LevelDebug;
 #define SINUCA3_SWITCHES "r:lc:t:d:T:L:f:"
     const char* testToRun = NULL;
 #endif

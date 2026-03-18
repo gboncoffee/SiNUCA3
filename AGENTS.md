@@ -186,7 +186,7 @@ Naming conventions:
 
 - Classes, structs: `PascalCase` (e.g. `Config`, `Component`).
 - Methods: `PascalCase` (e.g. `Configure`, `PrintStatistics`, `SendRequest`).
-- Enums: `UPPER_SNAKE` for values (e.g. `LEVEL_ERROR`).
+- Enums: `PascalCase` for values (e.g. `LevelError`).
 - Macros: `SINUCA3_*` naming and upper-case identifiers.
 - Variables: `camelCase` (e.g. `engine`, `logLevel`).
 - Members: exactly the same as variables, without any suffix or prefix.
