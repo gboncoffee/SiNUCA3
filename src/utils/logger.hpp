@@ -30,11 +30,11 @@
 
 namespace logger {
 enum Level {
-    LEVEL_ERROR = 0,
-    LEVEL_WARNING = 1,
-    LEVEL_INFO = 2,
+    LevelError = 0,
+    LevelWarning = 1,
+    LevelInfo = 2,
 #ifndef NDEBUG
-    LEVEL_DEBUG = 3,
+    LevelDebug = 3,
 #endif
 };
 
@@ -58,9 +58,9 @@ class Logger {
     Logger()
         :
 #ifndef NDEBUG
-          minLevel(LEVEL_DEBUG)
+          minLevel(LevelDebug)
 #else
-          minLevel(LEVEL_INFO)
+          minLevel(LevelInfo)
 #endif
     {
     }
@@ -136,7 +136,7 @@ class Logger {
  */
 #define SINUCA3_ERROR_PRINTF(...)                                         \
     do {                                                                  \
-        logger::Logger::Instance()->Log(logger::LEVEL_ERROR, __FILE__,    \
+        logger::Logger::Instance()->Log(logger::LevelError, __FILE__,     \
                                         __LINE__, __func__, __VA_ARGS__); \
     } while (0)
 
@@ -146,7 +146,7 @@ class Logger {
  */
 #define SINUCA3_WARNING_PRINTF(...)                                       \
     do {                                                                  \
-        logger::Logger::Instance()->Log(logger::LEVEL_WARNING, __FILE__,  \
+        logger::Logger::Instance()->Log(logger::LevelWarning, __FILE__,   \
                                         __LINE__, __func__, __VA_ARGS__); \
     } while (0)
 
@@ -154,10 +154,10 @@ class Logger {
  * @brief Macro for printing general information, drop-in replacement for
  * printf.
  */
-#define SINUCA3_LOG_PRINTF(...)                                           \
-    do {                                                                  \
-        logger::Logger::Instance()->Log(logger::LEVEL_INFO, __FILE__,     \
-                                        __LINE__, __func__, __VA_ARGS__); \
+#define SINUCA3_LOG_PRINTF(...)                                                \
+    do {                                                                       \
+        logger::Logger::Instance()->Log(logger::LevelInfo, __FILE__, __LINE__, \
+                                        __func__, __VA_ARGS__);                \
     } while (0)
 
 #ifndef NDEBUG
@@ -167,7 +167,7 @@ class Logger {
  */
 #define SINUCA3_DEBUG_PRINTF(...)                                         \
     do {                                                                  \
-        logger::Logger::Instance()->Log(logger::LEVEL_DEBUG, __FILE__,    \
+        logger::Logger::Instance()->Log(logger::LevelDebug, __FILE__,     \
                                         __LINE__, __func__, __VA_ARGS__); \
     } while (0)
 #else
