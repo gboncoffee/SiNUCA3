@@ -25,6 +25,8 @@
 
 #include <cassert>
 #include <cstdarg>
+#include <string>
+#include <vector>
 
 namespace logger {
 enum Level {
@@ -44,9 +46,13 @@ enum Level {
  */
 class Logger {
   private:
-    /* Minimum level that will be emitted. Messages with level > min_level_
+    /* Minimum level that will be emitted. Messages with level > minLevel
      * are filtered out. */
     Level minLevel;
+
+    /* List of basenames to filter by (exact match). Empty means no filtering.
+     */
+    std::vector<std::string> fileFilters;
 
     /* @brief Default-construct with no filtering (show all levels). */
     Logger()
@@ -76,6 +82,24 @@ class Logger {
     int SetLevel(const Level level);
     /** @brief Don't use directly, prefer using the macro. */
     Level GetLevel() const;
+
+    /**
+     * @brief Add a basename to the file filter list.
+     *
+     * If any filters are present, only log messages that originate from a file
+     * whose basename exactly matches one of the filters will be emitted.
+     */
+    void AddFileFilter(const char* basename);
+
+    /** @brief Clear all file basename filters (disable file filtering). */
+    void ClearFileFilters();
+
+    /**
+     * @brief Check whether a file basename is allowed by the current filters.
+     *
+     * If no filters are configured, this returns true for all files.
+     */
+    bool IsFileAllowed(const char* basename) const;
 };
 
 }  // namespace logger
@@ -90,7 +114,21 @@ class Logger {
 #define SINUCA3_SET_LOG_LEVEL(level) \
     (logger::Logger::Instance()->SetLevel(level))
 
+/**
+ * @brief Gets the log level.
+ *
+ * @details Messages with a level greater than the configured level will be
+ * suppressed. Levels are ordered from most severe (LEVEL_ERROR) to most
+ * verbose (LEVEL_DEBUG). The default is LEVEL_DEBUG (no filtering).
+ */
 #define SINUCA3_GET_LOG_LEVEL() (logger::Logger::Instance()->GetLevel())
+
+/**
+ * @brief Adds a file filter. If there's at least one filter, only messages from
+ * files with the specified basenames will be logged.
+ */
+#define SINUCA3_ADD_LOG_FILE_FILTER(file) \
+    (logger::Logger::Instance()->AddFileFilter(file))
 
 /**
  * @brief Macro for printing errors, drop-in replacement for printf with
